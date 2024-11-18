@@ -1,8 +1,8 @@
-# Your Name Here
+# Patrick McGrath
 # UWYO COSC 1010
-# Submission Date
-# Lab XX
-# Lab Section:
+# Submission Date: 11/17/2024
+# Lab 09
+# Lab Section: 12
 # Sources, people worked with, help given to:
 # Your
 # Comments
@@ -35,6 +35,77 @@
 # - Assign the parameter for sauce to the attribute.
 # - Create the toppings attribute, starting off as a list only holding cheese.
 
+class Pizza:
+    def __init__(self, size, sauce='red'):
+        self.setSize(size)
+        self.sauce = sauce
+        self.toppings = ["cheese"]
+    
+    def setSize(self, size):
+        if isinstance(size, int) and size > 10:
+            self.size = size
+        else:
+            self.size = 10
+    
+
+    def getSize(self):
+        return self.size
+
+    
+    def getSauce(self):
+        return self.sauce
+
+    
+    def addToppings(self, *toppings):
+        for topping in toppings:
+            self.toppings.append(topping)
+    
+    
+    def getToppings(self):
+        return self.toppings
+    
+
+    def getAmountOfToppings(self):
+        return len(self.toppings)
+
+
+def create_pizza():
+
+    while True:
+        try:
+            size = int(input("Enter pizza size (in inches, must be greater than 10): "))
+            if size <= 10:
+                print("Size must be greater than 10. Defaulting to 10 inches.")
+                size = 10
+            break
+        except ValueError:
+            print("Invalid input. Please enter an integer value for size.")
+
+    
+    sauce = input("Enter sauce type (default is 'red'): ")
+    if not sauce:
+        sauce = "red"  
+    
+    pizza = Pizza(size, sauce)
+    
+    while True:
+        add_topping = input("Do you want to add a topping? (yes/no): ").strip().lower()
+        if add_topping == 'yes':
+            topping = input("Enter topping: ").strip()
+            pizza.addToppings(topping)
+        elif add_topping == 'no':
+            break
+        else:
+            print("Please answer with 'yes' or 'no'.")
+    
+    
+    print("\nYour pizza details:")
+    print(f"Size: {pizza.getSize()} inches")
+    print(f"Sauce: {pizza.getSauce()}")
+    print(f"Toppings: {pizza.getToppings()}")
+    print(f"Number of toppings: {pizza.getAmountOfToppings()}")
+
+create_pizza()
 
 # You will be creating a Pizzeria class with the following attributes:
 # - orders, the number of orders placed. Should start at 0.
@@ -103,3 +174,111 @@ Your total price is $12.9
 
 Would you like to place an order? exit to exit
 """
+
+
+class Pizza:
+    def __init__(self, size, sauce='red'):
+        self.setSize(size)
+        self.sauce = sauce
+        self.toppings = ["cheese"]
+    
+    def setSize(self, size):
+        if isinstance(size, int) and size > 10:
+            self.size = size
+        else:
+            self.size = 10
+    
+    def getSize(self):
+        return self.size
+
+    def getSauce(self):
+        return self.sauce
+
+    def addToppings(self, *toppings):
+        for topping in toppings:
+            self.toppings.append(topping)
+    
+    def getToppings(self):
+        return self.toppings
+    
+    def getAmountOfToppings(self):
+        return len(self.toppings)
+
+
+class Pizzeria:
+    price_per_topping = 0.30
+    price_per_inch = 0.60
+
+    def __init__(self):
+        self.orders = 0
+        self.pizzas = []
+
+    def placeOrder(self):
+    
+        self.orders += 1
+        
+        while True:
+            try:
+                size = int(input("Enter pizza size (in inches, must be greater than 10): "))
+                if size <= 10:
+                    print("Size must be greater than 10. Defaulting to 10 inches.")
+                    size = 10
+                break
+            except ValueError:
+                print("Invalid input. Please enter an integer value for size.")
+
+        sauce = input("Enter sauce type (default is 'red'): ")
+        if not sauce:
+            sauce = "red"  
+
+        pizza = Pizza(size, sauce)
+        while True:
+            add_topping = input("Do you want to add a topping? (yes/no): ").strip().lower()
+            if add_topping == 'yes':
+                topping = input("Enter topping: ").strip()
+                pizza.addToppings(topping)
+            elif add_topping == 'no':
+                break
+            else:
+                print("Please answer with 'yes' or 'no'.")
+        
+        self.pizzas.append(pizza)
+
+        self.getReceipt(pizza)
+
+    def getPrice(self, pizza):
+        size_price = pizza.getSize() * Pizzeria.price_per_inch
+        toppings_price = pizza.getAmountOfToppings() * Pizzeria.price_per_topping
+        total_price = size_price + toppings_price
+        return total_price
+
+    def getReceipt(self, pizza):
+        print("\n--- Pizza Receipt ---")
+        print(f"Sauce: {pizza.getSauce()}")
+        print(f"Size: {pizza.getSize()} inches")
+        print(f"Toppings: {', '.join(pizza.getToppings())}")
+        size_price = pizza.getSize() * Pizzeria.price_per_inch
+        toppings_price = pizza.getAmountOfToppings() * Pizzeria.price_per_topping
+        total_price = self.getPrice(pizza)
+        print(f"Price for size: ${size_price:.2f}")
+        print(f"Price for toppings: ${toppings_price:.2f}")
+        print(f"Total price: ${total_price:.2f}")
+        print("----------------------\n")
+
+    def getNumberOfOrders(self):
+        return self.orders
+
+def run_pizzeria():
+    pizzeria = Pizzeria()
+
+    while True:
+        order_action = input("Would you like to order a pizza? (yes/exit): ").strip().lower()
+        if order_action == "yes":
+            pizzeria.placeOrder()
+        elif order_action == "exit":
+            print(f"\nTotal number of orders placed: {pizzeria.getNumberOfOrders()}")
+            break
+        else:
+            print("Invalid input. Please enter 'yes' to order or 'exit' to quit.")
+
+run_pizzeria()
